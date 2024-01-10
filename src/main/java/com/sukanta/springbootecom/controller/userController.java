@@ -4,15 +4,18 @@ import com.sukanta.springbootecom.config.ApiResponse;
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.config.JwtAuthService;
 import com.sukanta.springbootecom.config.LoggerUtil;
-import com.sukanta.springbootecom.model.User;
 import com.sukanta.springbootecom.model.enums.Role;
+import com.sukanta.springbootecom.model.user.LoginUser;
+import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.service.userService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "User", description = "User controller")
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin
@@ -50,7 +53,7 @@ public class userController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@RequestBody User request) {
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginUser request) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
 
         try {

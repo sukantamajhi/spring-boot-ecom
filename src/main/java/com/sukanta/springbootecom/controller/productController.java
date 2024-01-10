@@ -6,6 +6,7 @@ import com.sukanta.springbootecom.config.JwtAuthService;
 import com.sukanta.springbootecom.config.LoggerUtil;
 import com.sukanta.springbootecom.model.Product;
 import com.sukanta.springbootecom.service.productService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Product", description = "Product controller")
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin

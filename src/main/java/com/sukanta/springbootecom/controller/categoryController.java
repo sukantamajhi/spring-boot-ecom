@@ -6,6 +6,7 @@ import com.sukanta.springbootecom.config.JwtAuthService;
 import com.sukanta.springbootecom.config.LoggerUtil;
 import com.sukanta.springbootecom.model.Category;
 import com.sukanta.springbootecom.service.categoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Category", description = "Category controller")
 @RestController
 @RequestMapping("/api/categories")
 public class categoryController {

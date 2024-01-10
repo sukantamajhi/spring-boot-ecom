@@ -1,6 +1,7 @@
-package com.sukanta.springbootecom.model;
+package com.sukanta.springbootecom.model.user;
 
 import com.sukanta.springbootecom.model.enums.Role;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,19 +21,24 @@ import java.util.Date;
 @Document(collection = "users")
 public class User {
     @Id
+    @Hidden
     private String id;
     private String name;
     private String email;
     private String phone;
     private String address;
+    @Hidden
     private boolean active = true;
     @Field("role")
+    @Hidden
     private Role role;
     @Field("password")
     private String password;
     @CreatedDate
+    @Hidden
     private Date createdAt;
     @LastModifiedDate
+    @Hidden
     private Date updatedAt;
 }
 

@@ -3,12 +3,14 @@ package com.sukanta.springbootecom.service;
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.model.Category;
 import com.sukanta.springbootecom.repository.categoryRepository;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Hidden
 public class categoryService {
     private final categoryRepository categoryRepository;
 

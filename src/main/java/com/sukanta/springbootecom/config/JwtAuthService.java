@@ -1,6 +1,6 @@
 package com.sukanta.springbootecom.config;
 
-import com.sukanta.springbootecom.model.User;
+import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.repository.userRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -61,7 +61,7 @@ public class JwtAuthService {
         }
     }
 
-    public boolean verifyJWT(String authToken) throws Exception {
+    public boolean verifyJWT(String authToken) {
         return !validateToken(authToken);
     }
 }

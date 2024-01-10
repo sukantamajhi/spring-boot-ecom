@@ -2,9 +2,11 @@ package com.sukanta.springbootecom.service;
 
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.config.JwtAuthService;
-import com.sukanta.springbootecom.model.User;
 import com.sukanta.springbootecom.model.enums.Role;
+import com.sukanta.springbootecom.model.user.LoginUser;
+import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.repository.userRepository;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Hidden
 public class userService {
     private final Logger log = LoggerFactory.getLogger(userService.class);
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
@@ -39,7 +42,7 @@ public class userService {
         }
     }
 
-    public String login(@NotNull User request) throws Exception {
+    public String login(LoginUser request) throws Exception {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {

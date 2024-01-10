@@ -1,6 +1,6 @@
 package com.sukanta.springbootecom.repository;
 
-import com.sukanta.springbootecom.model.User;
+import com.sukanta.springbootecom.model.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
