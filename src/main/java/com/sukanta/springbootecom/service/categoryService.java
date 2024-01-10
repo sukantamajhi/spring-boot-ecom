@@ -17,11 +17,7 @@ public class categoryService {
     }
 
     public Category createCategory(Category request, String userId) {
-        Category category = Category.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .createdBy(userId)
-                .build();
+        Category category = Category.builder().name(request.getName()).description(request.getDescription()).createdBy(userId).build();
 
         return categoryRepository.save(category);
     }
@@ -35,7 +31,6 @@ public class categoryService {
     }
 
     public Category update(String categoryId, String userId, Category request) throws Exception {
-
         Category category = categoryRepository.findById(categoryId).orElse(null);
         assert category != null;
         if (!Objects.equals(category.getCreatedBy(), userId)) {
@@ -45,6 +40,16 @@ public class categoryService {
             category.setDescription(request.getDescription());
 
             return categoryRepository.save(category);
+        }
+    }
+
+    public void delete(String categoryId, String userId) throws Exception {
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        assert category != null;
+        if (!Objects.equals(category.getCreatedBy(), userId)) {
+            throw new Exception(Constant.UPDATE_AUTHORIZATION_FAILED);
+        } else {
+            categoryRepository.deleteById(categoryId);
         }
     }
 }

@@ -5,6 +5,7 @@ import com.sukanta.springbootecom.config.JwtAuthService;
 import com.sukanta.springbootecom.model.User;
 import com.sukanta.springbootecom.model.enums.Role;
 import com.sukanta.springbootecom.repository.userRepository;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,19 +23,11 @@ public class userService {
         this.jwtAuthService = jwtAuthService;
     }
 
-    public User registerUser(User request) throws Exception {
+    public User registerUser(@NotNull User request) throws Exception {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {
-            var user = User.builder()
-                    .id(request.getId())
-                    .name(request.getName())
-                    .email(request.getEmail())
-                    .phone(request.getPhone())
-                    .address(request.getAddress())
-                    .role(Role.USER)
-                    .password(encoder.encode(request.getPassword()))
-                    .build();
+            var user = User.builder().name(request.getName()).email(request.getEmail()).phone(request.getPhone()).address(request.getAddress()).role(Role.USER).password(encoder.encode(request.getPassword())).build();
             try {
                 return userRepository.save(user);
             } catch (Exception err) {
@@ -46,7 +39,7 @@ public class userService {
         }
     }
 
-    public String login(User request) throws Exception {
+    public String login(@NotNull User request) throws Exception {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {
@@ -57,6 +50,34 @@ public class userService {
             } else {
                 throw new Exception(Constant.PASSWORD_MISMATCHED);
             }
+        }
+    }
+
+    public User update(String userId, User request) throws Exception {
+        var existingUser = userRepository.findById(userId).orElse(null);
+        if (existingUser == null) {
+            throw new Exception(Constant.USER_NOT_FOUND);
+        } else {
+            existingUser.setName(request.getName());
+            existingUser.setEmail(request.getEmail());
+            existingUser.setAddress(request.getAddress());
+            existingUser.setPassword(encoder.encode(request.getPassword()));
+            existingUser.setRole(request.getRole());
+            existingUser.setPhone(request.getPhone());
+            existingUser.setActive(request.isActive());
+
+            return userRepository.save(existingUser);
+        }
+    }
+
+    public User changeStatus(String userId) throws Exception {
+        var existingUser = userRepository.findById(userId).orElse(null);
+        if (existingUser == null) {
+            throw new Exception(Constant.USER_NOT_FOUND);
+        } else {
+            existingUser.setActive(!existingUser.isActive());
+
+            return userRepository.save(existingUser);
         }
     }
 }

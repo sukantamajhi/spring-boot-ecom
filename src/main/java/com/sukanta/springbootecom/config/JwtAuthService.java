@@ -61,7 +61,7 @@ public class JwtAuthService {
         }
     }
 
-    public boolean verifyJWT(String authToken, ApiResponse<?> apiResponse) throws Exception {
+    public boolean verifyJWT(String authToken) throws Exception {
         return !validateToken(authToken);
     }
 }

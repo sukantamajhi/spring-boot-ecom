@@ -27,11 +27,13 @@ public class categoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<Category>> createCategory(@RequestHeader(name = "Authorization") String token, @RequestBody Category request) {
+    public ResponseEntity<ApiResponse<Category>> createCategory(
+            @RequestHeader(name = "Authorization") String token, @RequestBody Category request
+    ) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
 
         try {
-            boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
             if (tokenExpired) {
                 apiResponse.setError(true);
@@ -64,7 +66,7 @@ public class categoryController {
     public ResponseEntity<ApiResponse<List<Category>>> allCategories(@RequestHeader(name = "Authorization") String token) {
         ApiResponse<List<Category>> apiResponse = new ApiResponse<>();
         try {
-            boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
             if (tokenExpired) {
                 apiResponse.setError(true);
@@ -95,7 +97,7 @@ public class categoryController {
     public ResponseEntity<ApiResponse<List<Category>>> getCategoriesByUserId(@NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String userId) {
         ApiResponse<List<Category>> apiResponse = new ApiResponse<>();
         try {
-            boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
             if (tokenExpired) {
                 apiResponse.setError(true);
@@ -128,7 +130,7 @@ public class categoryController {
     ) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
         try {
-            boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
             if (tokenExpired) {
                 apiResponse.setError(true);
@@ -161,6 +163,32 @@ public class categoryController {
     public ResponseEntity<ApiResponse<Category>> delete(
             @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId
     ) {
-        return null;
+        ApiResponse<Category> apiResponse = new ApiResponse<>();
+        try {
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
+
+            if (tokenExpired) {
+                apiResponse.setError(true);
+                apiResponse.setCode("SESSION_EXPIRED");
+                apiResponse.setMessage(Constant.SESSION_EXPIRED);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            } else {
+                var userId = jwtAuthService.getUserId(token);
+                categoryService.delete(categoryId, userId);
+
+                apiResponse.setError(false);
+                apiResponse.setCode("CATEGORY_DELETED");
+                apiResponse.setMessage(Constant.CATEGORY_DELETED);
+
+                return ResponseEntity.ok().body(apiResponse);
+            }
+        } catch (Exception err) {
+            log.error("Error in delete category ==>> " + err);
+            apiResponse.setError(true);
+            apiResponse.setCode("PRODUCT_NOT_FOUND");
+            apiResponse.setMessage(err.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED).body(apiResponse);
+        }
     }
 }

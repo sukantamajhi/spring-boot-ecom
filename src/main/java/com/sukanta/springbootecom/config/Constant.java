@@ -21,6 +21,9 @@ public class Constant {
     public static final String UPDATE_AUTHORIZATION_FAILED = "You don't have access to update this product";
     public static final String CATEGORY_UPDATED = "Category updated successfully";
     public static final String PRODUCT_DELETED_SUCCESS = "Product deleted successfully";
+    public static final String CATEGORY_DELETED = "Category deleted successfully";
+    public static final String ACCESS_DENIED = "You don't have permission for this operation";
+    public static final String USER_UPDATED = "User updated successfully";
 
 
     public static float formatToTwoDecimalPlaces(double number) {

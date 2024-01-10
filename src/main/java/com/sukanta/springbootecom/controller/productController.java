@@ -32,7 +32,7 @@ public class productController {
     public ResponseEntity<ApiResponse<Product>> createProduct(@NonNull @RequestHeader(name = "Authorization") String token, @RequestBody Product request)
             throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
-        var tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+        var tokenExpired = jwtAuthService.verifyJWT(token);
 
         if (tokenExpired) {
             apiResponse.setError(true);
@@ -56,7 +56,7 @@ public class productController {
     public ResponseEntity<ApiResponse<List<Product>>> getProductsByUserId(@NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "userId") String userId, @RequestParam(name = "searchString", required = false) String searchString)
             throws Exception {
         ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
-        var tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+        var tokenExpired = jwtAuthService.verifyJWT(token);
 
         if (tokenExpired) {
             apiResponse.setError(true);
@@ -79,7 +79,7 @@ public class productController {
     public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(@NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "searchString", required = false) String searchString)
             throws Exception {
         ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
-        var tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+        var tokenExpired = jwtAuthService.verifyJWT(token);
 
         if (tokenExpired) {
             apiResponse.setError(true);
@@ -103,7 +103,7 @@ public class productController {
             @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId, @RequestBody Product request
     ) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
-        boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+        boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
         if (tokenExpired) {
             apiResponse.setError(true);
@@ -136,7 +136,7 @@ public class productController {
             @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId
     ) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
-        boolean tokenExpired = jwtAuthService.verifyJWT(token, apiResponse);
+        boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
         if (tokenExpired) {
             apiResponse.setError(true);

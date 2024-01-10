@@ -25,6 +25,7 @@ public class User {
     private String email;
     private String phone;
     private String address;
+    private boolean active = true;
     @Field("role")
     private Role role;
     @Field("password")
@@ -33,19 +34,5 @@ public class User {
     private Date createdAt;
     @LastModifiedDate
     private Date updatedAt;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", password='" + password + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }
 
