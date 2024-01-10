@@ -1,6 +1,7 @@
 package com.sukanta.springbootecom.model;
 
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +21,16 @@ import java.util.Date;
 @Document(collection = "categories")
 public class Category {
     @Id
+    @Hidden
     private String id;
     private String name;
     private String description;
     @CreatedBy
     private String createdBy;
     @CreatedDate
+    @Hidden
     private Date createdAt;
     @LastModifiedDate
+    @Hidden
     private Date updatedBy;
 }
