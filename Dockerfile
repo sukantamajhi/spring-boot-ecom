@@ -5,6 +5,6 @@ EXPOSE 8080
 RUN ./mvnw compile
 RUN ./mvnw package
 
-COPY target/*.jar app.jar
+COPY . .
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT [ "java", "-jar", "target/spring-boot-ecom-0.0.1.jar" ]
