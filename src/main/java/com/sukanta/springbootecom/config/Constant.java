@@ -24,7 +24,8 @@ public class Constant {
     public static final String CATEGORY_DELETED = "Category deleted successfully";
     public static final String ACCESS_DENIED = "You don't have permission for this operation";
     public static final String USER_UPDATED = "User updated successfully";
-
+    public static final String PRODUCT_STATUS_UPDATED = "Product status updated successfully";
+    public static final String USERS_FETCHED_SUCCESS = "Users fetched successfully";
 
     public static float formatToTwoDecimalPlaces(double number) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");

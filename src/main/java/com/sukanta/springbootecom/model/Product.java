@@ -28,6 +28,8 @@ public class Product {
     private Currency currency;
     private String currSymbol;
     private String sku;
+    @Builder.Default
+    private boolean status = false;
     @Reference
     private List<Category> category;
     @CreatedBy

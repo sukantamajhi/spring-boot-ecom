@@ -31,7 +31,8 @@ public class productController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<Product>> createProduct(@NonNull @RequestHeader(name = "Authorization") String token, @RequestBody Product request)
+    public ResponseEntity<ApiResponse<Product>> createProduct(
+            @NonNull @RequestHeader(name = "Authorization") String token, @RequestBody Product request)
             throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         var tokenExpired = jwtAuthService.verifyJWT(token);
@@ -55,7 +56,9 @@ public class productController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<Product>>> getProductsByUserId(@NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "userId") String userId, @RequestParam(name = "searchString", required = false) String searchString)
+    public ResponseEntity<ApiResponse<List<Product>>> getProductsByUserId(
+            @NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "userId") String userId,
+            @RequestParam(name = "searchString", required = false) String searchString)
             throws Exception {
         ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
         var tokenExpired = jwtAuthService.verifyJWT(token);
@@ -78,7 +81,9 @@ public class productController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(@NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "searchString", required = false) String searchString)
+    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @RequestParam(name = "searchString", required = false) String searchString)
             throws Exception {
         ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
         var tokenExpired = jwtAuthService.verifyJWT(token);
@@ -102,8 +107,8 @@ public class productController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<ApiResponse<Product>> updateProduct(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId, @RequestBody Product request
-    ) throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId,
+            @RequestBody Product request) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -135,8 +140,8 @@ public class productController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<Product>> deleteProduct(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId
-    ) throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId)
+            throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -155,11 +160,48 @@ public class productController {
                 apiResponse.setCode("PRODUCT_DELETED_SUCCESS");
                 return ResponseEntity.ok().body(apiResponse);
             } catch (Exception err) {
-                log.error("Error in delete product ==>> " + err);
+                log.error("Error in delete product ==>> ", err);
                 apiResponse.setError(true);
                 apiResponse.setCode("INTERNAL_SERVER_ERROR");
                 apiResponse.setMessage(err.getMessage());
 
+                return ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
+    }
+
+    @PutMapping("/status/{productId}")
+    public ResponseEntity<ApiResponse<Product>> updateProductStatus(
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId)
+            throws Exception {
+        ApiResponse<Product> apiResponse = new ApiResponse<>();
+        boolean tokenExpired = jwtAuthService.verifyJWT(token);
+
+        if (tokenExpired) {
+            apiResponse.setError(true);
+            apiResponse.setCode("SESSION_EXPIRED");
+            apiResponse.setMessage(Constant.SESSION_EXPIRED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+        } else {
+            var userId = jwtAuthService.getUserId(token);
+
+            try {
+                Product updatedProduct = productService.changeStatus(userId, productId);
+
+                apiResponse.setError(false);
+                apiResponse.setCode("PRODUCT_STATUS_UPDATED");
+                apiResponse.setMessage(Constant.PRODUCT_STATUS_UPDATED);
+                apiResponse.setData(updatedProduct);
+                return ResponseEntity.ok().body(apiResponse);
+
+            } catch (Exception e) {
+                log.error("Error in change product status", e);
+                ApiResponse.builder()
+                        .error(true)
+                        .code("INTERNAL_SERVER_ERROR")
+                        .message(e.getMessage())
+                        .err(e)
+                        .build();
                 return ResponseEntity.internalServerError().body(apiResponse);
             }
         }

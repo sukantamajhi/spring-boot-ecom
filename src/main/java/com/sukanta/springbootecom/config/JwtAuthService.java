@@ -16,9 +16,8 @@ import java.util.Date;
 
 @Component
 public class JwtAuthService {
-    private static final String SECRET_KEY = "MTkH3MnbXRe5OAd164KR96l9MjObF/Se339B0BKRy9Dy+MGotE+oOwM/YbtFoQzKqJpccn47AX4h7VuTS4kV5Q=="; // Change this with a strong secret key
-    private static final long EXPIRATION_TIME = 864_000_000; // 10 days in milliseconds
-    private final Logger logger = LoggerFactory.getLogger(JwtAuthService.class);
+    private static final String SECRET_KEY = "MTkH3MnbXRe5OAd164KR96l9MjObF/Se339B0BKRy9Dy+MGotE+oOwM/YbtFoQzKqJpccn47AX4h7VuTS4kV5Q==";
+    private static final long EXPIRATION_TIME = 864_000_000;
 
     private final userRepository userRepository;
 
@@ -35,7 +34,9 @@ public class JwtAuthService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email).claim("userId", userId).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email).claim("userId", userId)
+                .setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public User getUser(String token) {

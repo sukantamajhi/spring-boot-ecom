@@ -27,6 +27,7 @@ public class User {
     private String email;
     private String phone;
     private String address;
+    @Builder.Default
     @Hidden
     private boolean active = true;
     @Field("role")
@@ -41,4 +42,3 @@ public class User {
     @Hidden
     private Date updatedAt;
 }
-

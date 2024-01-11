@@ -3,12 +3,19 @@ package com.sukanta.springbootecom.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @JsonInclude(Include.NON_NULL)
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiResponse<T> {
     @JsonProperty(required = true)
     private boolean error;
@@ -19,16 +26,4 @@ public class ApiResponse<T> {
     private String access_token;
     private T data;
     private Exception err;
-
-    @Override
-    public String toString() {
-        return "ApiResponse{" +
-                "error=" + error +
-                ", code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                ", access_token='" + access_token + '\'' +
-                ", data=" + data +
-                ", err=" + err +
-                '}';
-    }
 }

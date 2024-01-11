@@ -6,15 +6,17 @@ import com.sukanta.springbootecom.model.enums.Role;
 import com.sukanta.springbootecom.model.user.LoginUser;
 import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.repository.userRepository;
-import io.swagger.v3.oas.annotations.Hidden;
+
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.converters.models.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Hidden
 public class userService {
     private final Logger log = LoggerFactory.getLogger(userService.class);
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
@@ -30,7 +32,9 @@ public class userService {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {
-            var user = User.builder().name(request.getName()).email(request.getEmail()).phone(request.getPhone()).address(request.getAddress()).role(Role.USER).password(encoder.encode(request.getPassword())).build();
+            var user = User.builder().name(request.getName()).email(request.getEmail()).phone(request.getPhone())
+                    .address(request.getAddress()).role(Role.USER).password(encoder.encode(request.getPassword()))
+                    .build();
             try {
                 return userRepository.save(user);
             } catch (Exception err) {
@@ -42,7 +46,7 @@ public class userService {
         }
     }
 
-    public String login(LoginUser request) throws Exception {
+    public String login(@NotNull LoginUser request) throws Exception {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {
@@ -83,4 +87,13 @@ public class userService {
             return userRepository.save(existingUser);
         }
     }
+
+    public List<User> getAllUsers(int page) {
+        return userRepository.findAll().subList(page * 10, (page + 1) * 10);
+    }
+
+    public User getUserById(String userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
+
 }
