@@ -7,8 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -16,10 +15,10 @@ import java.util.Date;
 
 @Component
 public class JwtAuthService {
-    private static final String SECRET_KEY = "MTkH3MnbXRe5OAd164KR96l9MjObF/Se339B0BKRy9Dy+MGotE+oOwM/YbtFoQzKqJpccn47AX4h7VuTS4kV5Q==";
     private static final long EXPIRATION_TIME = 864_000_000;
-
     private final userRepository userRepository;
+    @Value("${SECRET_KEY}")
+    private String SECRET_KEY;
 
     public JwtAuthService(userRepository userRepository) {
         this.userRepository = userRepository;
@@ -34,9 +33,7 @@ public class JwtAuthService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email).claim("userId", userId)
-                .setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email).claim("userId", userId).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public User getUser(String token) {
@@ -53,7 +50,7 @@ public class JwtAuthService {
         return String.valueOf(claims.get("userId"));
     }
 
-    public boolean validateToken(String token) {
+    private boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
             return true;

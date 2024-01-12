@@ -29,7 +29,7 @@ import com.sukanta.springbootecom.service.userService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "User", description = "User controller")
+@Tag(name = "User", description = "User API")
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin

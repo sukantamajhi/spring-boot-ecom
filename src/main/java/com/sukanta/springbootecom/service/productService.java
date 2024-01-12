@@ -4,8 +4,6 @@ import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.model.Product;
 import com.sukanta.springbootecom.repository.productRepository;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,23 +19,16 @@ public class productService {
     }
 
     public Product createProduct(@NotNull Product request, String userId) {
-        Product product = Product.builder().name(request.getName()).description(request.getDescription())
-                .sku(request.getSku()).category(request.getCategory())
-                .amount(Constant.formatToTwoDecimalPlaces(request.getAmount())).currency(request.getCurrency())
-                .currSymbol(request.getCurrency().getAbbreviation()).createdBy(userId).build();
+        Product product = Product.builder().name(request.getName()).description(request.getDescription()).sku(request.getSku()).category(request.getCategory()).amount(Constant.formatToTwoDecimalPlaces(request.getAmount())).currency(request.getCurrency()).currSymbol(request.getCurrency().getAbbreviation()).createdBy(userId).build();
         return productRepository.save(product);
     }
 
     public List<Product> getProducts(String userId, String searchString) {
-        return searchString == null ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
-                : productRepository
-                        .findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                                userId, searchString, searchString);
+        return searchString == null ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId) : productRepository.findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(userId, searchString, searchString);
     }
 
     public List<Product> getAllProducts(String searchString) {
-        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                searchString, searchString);
+        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(searchString, searchString);
     }
 
     public Product updateProduct(String userId, String productId, Product request) throws Exception {
@@ -67,7 +58,8 @@ public class productService {
     }
 
     public Product changeStatus(
-            @NotNull String userId, @NotNull String productId) throws Exception {
+            @NotNull String userId, @NotNull String productId
+    ) throws Exception {
         Product product = productRepository.findByCreatedByAndId(userId, productId);
 
         if (product != null) {

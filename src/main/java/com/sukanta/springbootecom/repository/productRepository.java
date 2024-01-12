@@ -10,10 +10,16 @@ import java.util.List;
 public interface productRepository extends MongoRepository<Product, String> {
     List<Product> getProductsByCreatedByOrderByCreatedAtDesc(String createdBy);
 
-    List<Product> findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(String createdBy, String name, String description);
+    List<Product> findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+            String createdBy, String name, String description
+    );
 
-    List<Product> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(String name, String description);
+    List<Product> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+            String name, String description
+    );
 
     Product findByCreatedByAndId(String createdBy, String id);
+
+    Product findAllByDiscountId(String discountId);
 
 }

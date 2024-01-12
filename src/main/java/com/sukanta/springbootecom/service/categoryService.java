@@ -1,12 +1,13 @@
 package com.sukanta.springbootecom.service;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.model.Category;
 import com.sukanta.springbootecom.repository.categoryRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class categoryService {
@@ -17,7 +18,8 @@ public class categoryService {
     }
 
     public Category createCategory(Category request, String userId) {
-        Category category = Category.builder().name(request.getName()).description(request.getDescription()).createdBy(userId).build();
+        Category category = Category.builder().name(request.getName()).description(request.getDescription())
+                .createdBy(userId).build();
 
         return categoryRepository.save(category);
     }

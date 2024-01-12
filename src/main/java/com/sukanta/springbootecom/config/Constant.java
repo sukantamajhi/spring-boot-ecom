@@ -10,7 +10,6 @@ public class Constant {
     public static final String PASSWORD_MISMATCHED = "Password not matched. Please check and try again";
     public static final String SESSION_EXPIRED = "Session expired";
     public static final String LOGIN_SUCCESS = "User logged in successfully";
-    public static final String INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String UNAUTHORIZED = "Unauthorized";
     public static final String PRODUCT_ADDED = "Product added successfully";
     public static final String PRODUCTS_FETCH_SUCCESS = "Products fetched successfully";
@@ -26,6 +25,11 @@ public class Constant {
     public static final String USER_UPDATED = "User updated successfully";
     public static final String PRODUCT_STATUS_UPDATED = "Product status updated successfully";
     public static final String USERS_FETCHED_SUCCESS = "Users fetched successfully";
+    public static final String DISCOUNT_CREATED = "Discount created successfully";
+    public static final String COUPON_CREATE_FAILED = "Failed to create coupon";
+    public static final String COUPON_CREATED = "Coupon created successfully";
+    public static final String COUPONS_FETCH_FAILED = "Failed to fetch coupons";
+    public static final String COUPONS_FETCHED_SUCCESS = "Coupons fetched successfully";
 
     public static float formatToTwoDecimalPlaces(double number) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");

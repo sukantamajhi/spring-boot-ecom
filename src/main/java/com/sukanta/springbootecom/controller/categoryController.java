@@ -1,21 +1,31 @@
 package com.sukanta.springbootecom.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sukanta.springbootecom.config.ApiResponse;
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.config.JwtAuthService;
 import com.sukanta.springbootecom.config.LoggerUtil;
 import com.sukanta.springbootecom.model.Category;
 import com.sukanta.springbootecom.service.categoryService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@Tag(name = "Category", description = "Category controller")
+@Tag(name = "Category", description = "Category API")
 @RestController
 @RequestMapping("/api/categories")
 public class categoryController {
@@ -30,8 +40,7 @@ public class categoryController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Category>> createCategory(
-            @RequestHeader(name = "Authorization") String token, @RequestBody Category request
-    ) {
+            @RequestHeader(name = "Authorization") String token, @RequestBody Category request) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
 
         try {
@@ -65,7 +74,8 @@ public class categoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<Category>>> allCategories(@RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<ApiResponse<List<Category>>> allCategories(
+            @RequestHeader(name = "Authorization") String token) {
         ApiResponse<List<Category>> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
@@ -96,7 +106,8 @@ public class categoryController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse<List<Category>>> getCategoriesByUserId(@NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String userId) {
+    public ResponseEntity<ApiResponse<List<Category>>> getCategoriesByUserId(
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String userId) {
         ApiResponse<List<Category>> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
@@ -128,8 +139,8 @@ public class categoryController {
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse<Category>> updateCategory(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId, Category request
-    ) {
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId,
+            Category request) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
@@ -163,8 +174,7 @@ public class categoryController {
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<ApiResponse<Category>> delete(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId
-    ) {
+            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
