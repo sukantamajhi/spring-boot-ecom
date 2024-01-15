@@ -1,5 +1,16 @@
 package com.sukanta.springbootecom.controller;
 
+import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sukanta.springbootecom.config.ApiResponse;
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.config.JwtAuthService;
@@ -8,12 +19,8 @@ import com.sukanta.springbootecom.model.Discount;
 import com.sukanta.springbootecom.model.enums.Role;
 import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.service.discountService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "Discount", description = "Discount API")
@@ -33,8 +40,7 @@ public class discountController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Discount>> createDiscount(
-            @NonNull @RequestHeader(name = "Authorization") String token, @NonNull @RequestBody Discount request
-    ) {
+            @NonNull @RequestHeader(name = "Authorization") String token, @NonNull @RequestBody Discount request) {
         ApiResponse<Discount> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
@@ -47,7 +53,7 @@ public class discountController {
                 log.info("Creating discount");
                 User userDetails = jwtAuthService.getUser(token);
                 if (userDetails != null && userDetails.getRole() == Role.ADMIN) {
-                    Discount discount = discountService.createDiscount(request, userDetails.getId());
+                    Discount discount = discountService.createDiscount(request, userDetails);
 
                     apiResponse.setError(false);
                     apiResponse.setCode("DISCOUNT_CREATED");

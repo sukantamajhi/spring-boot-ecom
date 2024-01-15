@@ -55,8 +55,8 @@ public class productController {
             apiResponse.setMessage(Constant.SESSION_EXPIRED);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
         } else {
-            var userId = jwtAuthService.getUserId(token);
-            var product = productService.createProduct(request, userId);
+            var user = jwtAuthService.getUser(token);
+            var product = productService.createProduct(request, user);
 
             apiResponse.setData(product);
             apiResponse.setError(false);
@@ -69,7 +69,8 @@ public class productController {
 
     @GetMapping("")
     public ResponseEntity<ApiResponse<List<Product>>> getProductsByUserId(
-            @NonNull @RequestHeader(name = "Authorization") String token, @RequestParam(name = "userId") String userId,
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @RequestParam(name = "userId") String userId,
             @RequestParam(name = "searchString", required = false) String searchString)
             throws Exception {
         ApiResponse<List<Product>> apiResponse = new ApiResponse<>();

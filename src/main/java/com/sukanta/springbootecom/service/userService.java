@@ -15,6 +15,8 @@ import com.sukanta.springbootecom.model.user.LoginUser;
 import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.repository.userRepository;
 
+import lombok.NonNull;
+
 @Service
 public class userService {
     private final Logger log = LoggerUtil.getLogger(this);
@@ -35,7 +37,11 @@ public class userService {
                     .address(request.getAddress()).role(Role.USER).password(encoder.encode(request.getPassword()))
                     .build();
             try {
-                return userRepository.save(user);
+                if (user != null) {
+                    return userRepository.save(user);
+                } else {
+                    throw new Exception(Constant.USER_CREATE_FAILED);
+                }
             } catch (Exception err) {
                 log.error("Error in saving data to database", err);
                 throw new Exception(Constant.USER_CREATE_FAILED);
@@ -59,7 +65,7 @@ public class userService {
         }
     }
 
-    public User update(String userId, User request) throws Exception {
+    public User update(@NonNull String userId, User request) throws Exception {
         var existingUser = userRepository.findById(userId).orElse(null);
         if (existingUser == null) {
             throw new Exception(Constant.USER_NOT_FOUND);
@@ -76,7 +82,7 @@ public class userService {
         }
     }
 
-    public User changeStatus(String userId) throws Exception {
+    public User changeStatus(@NonNull String userId) throws Exception {
         var existingUser = userRepository.findById(userId).orElse(null);
         if (existingUser == null) {
             throw new Exception(Constant.USER_NOT_FOUND);
@@ -91,8 +97,8 @@ public class userService {
         return userRepository.findAll().subList(page * 10, (page + 1) * 10);
     }
 
-    public User getUserById(String userId) {
-        return userRepository.findById(userId).orElse(null);
+    public User getUserById(@NonNull String userId) {
+        return userRepository.findById(userId).get();
     }
 
 }

@@ -107,7 +107,8 @@ public class categoryController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<Category>>> getCategoriesByUserId(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String userId) {
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @PathVariable String userId) {
         ApiResponse<List<Category>> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
@@ -139,7 +140,8 @@ public class categoryController {
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse<Category>> updateCategory(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId,
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @NonNull @PathVariable String categoryId,
             Category request) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
         try {
@@ -174,7 +176,7 @@ public class categoryController {
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<ApiResponse<Category>> delete(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String categoryId) {
+            @NonNull @RequestHeader(name = "Authorization") String token, @NonNull @PathVariable String categoryId) {
         ApiResponse<Category> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);

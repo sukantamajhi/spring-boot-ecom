@@ -3,6 +3,7 @@ package com.sukanta.springbootecom.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.sukanta.springbootecom.config.Constant;
@@ -17,11 +18,15 @@ public class categoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category createCategory(Category request, String userId) {
+    public Category createCategory(Category request, String userId) throws Exception {
         Category category = Category.builder().name(request.getName()).description(request.getDescription())
                 .createdBy(userId).build();
 
-        return categoryRepository.save(category);
+        if (category != null) {
+            return categoryRepository.save(category);
+        } else {
+            throw new Exception("Category create failed");
+        }
     }
 
     public List<Category> getAllCategories() {
@@ -32,8 +37,8 @@ public class categoryService {
         return categoryRepository.findByCreatedBy(userId);
     }
 
-    public Category update(String categoryId, String userId, Category request) throws Exception {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
+    public Category update(@NonNull String categoryId, String userId, Category request) throws Exception {
+        Category category = categoryRepository.findById(categoryId).get();
         assert category != null;
         if (!Objects.equals(category.getCreatedBy(), userId)) {
             throw new Exception(Constant.UPDATE_AUTHORIZATION_FAILED);
@@ -45,8 +50,8 @@ public class categoryService {
         }
     }
 
-    public void delete(String categoryId, String userId) throws Exception {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
+    public void delete(@NonNull String categoryId, String userId) throws Exception {
+        Category category = categoryRepository.findById(categoryId).get();
         assert category != null;
         if (!Objects.equals(category.getCreatedBy(), userId)) {
             throw new Exception(Constant.UPDATE_AUTHORIZATION_FAILED);

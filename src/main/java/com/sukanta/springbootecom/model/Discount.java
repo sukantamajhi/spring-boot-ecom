@@ -1,17 +1,21 @@
 package com.sukanta.springbootecom.model;
 
+import java.util.Date;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.sukanta.springbootecom.model.user.User;
+
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Date;
 
 @Data
 @Builder
@@ -34,8 +38,9 @@ public class Discount {
     private Date validFrom;
     private Date validTo;
     @CreatedBy
+    @DBRef
     @Hidden
-    private String createdBy;
+    private User createdBy;
     @CreatedDate
     @Hidden
     private Date createdAt;

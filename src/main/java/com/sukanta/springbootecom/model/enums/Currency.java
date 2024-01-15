@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Currency {
     INR("₹"),
-    DOLLARS("$"),
+    USD("$"),
     GBP("£");
 
     private final String abbreviation;

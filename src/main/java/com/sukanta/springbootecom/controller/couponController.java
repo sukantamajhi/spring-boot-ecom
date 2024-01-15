@@ -1,16 +1,29 @@
-package com.sukanta.springbootecom.coupon;
+package com.sukanta.springbootecom.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sukanta.springbootecom.config.ApiResponse;
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.config.JwtAuthService;
+import com.sukanta.springbootecom.model.Coupon;
 import com.sukanta.springbootecom.model.enums.Role;
+import com.sukanta.springbootecom.service.couponService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -26,11 +39,9 @@ public class couponController {
         this.couponService = couponService;
     }
 
-
     @PostMapping("")
     public ResponseEntity<ApiResponse<Coupon>> createCoupon(
-            @RequestHeader(name = "Authorization") String token, @RequestBody Coupon request
-    ) {
+            @RequestHeader(name = "Authorization") String token, @RequestBody Coupon request) {
         ApiResponse<Coupon> apiResponse = new ApiResponse<>();
 
         try {
@@ -75,8 +86,9 @@ public class couponController {
 
     @GetMapping("")
     public ResponseEntity<ApiResponse<List<Coupon>>> getAllCoupons(
-            @RequestHeader(name = "Authorization") String token
-    ) {
+            @RequestHeader(name = "Authorization") String token,
+            @RequestParam(name = "limit", defaultValue = "10") int limit,
+            @RequestParam(name = "page", defaultValue = "1") int page) {
         ApiResponse<List<Coupon>> apiResponse = new ApiResponse<>();
 
         try {
@@ -90,7 +102,7 @@ public class couponController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
             }
 
-            List<Coupon> coupons = couponService.getAll();
+            List<Coupon> coupons = couponService.getAll(page, limit);
 
             apiResponse.setError(false);
             apiResponse.setCode("COUPONS_FETCHED_SUCCESS");
@@ -106,6 +118,42 @@ public class couponController {
 
             return ResponseEntity.internalServerError().body(apiResponse);
         }
+    }
+
+    @GetMapping("/{couponId}")
+    public ResponseEntity<ApiResponse<Coupon>> getCouponDetails(
+            @RequestHeader(name = "Authorization") String token,
+            @NonNull @PathVariable String couponId) {
+        ApiResponse<Coupon> apiResponse = new ApiResponse<>();
+
+        try {
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
+
+            if (tokenExpired) {
+                apiResponse.setError(true);
+                apiResponse.setCode("SESSION_EXPIRED");
+                apiResponse.setMessage(Constant.SESSION_EXPIRED);
+
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            }
+
+            Coupon coupon = couponService.getCouponDetails(couponId);
+
+            apiResponse.setError(false);
+            apiResponse.setCode("COUPONS_FETCHED_SUCCESS");
+            apiResponse.setMessage(Constant.COUPONS_FETCHED_SUCCESS);
+            apiResponse.setData(coupon);
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception err) {
+            log.error("error in get coupons-->> " + err);
+            apiResponse.setError(true);
+            apiResponse.setCode("COUPONS_FETCH_FAILED");
+            apiResponse.setMessage(Constant.COUPONS_FETCH_FAILED);
+            apiResponse.setErr(err);
+
+            return ResponseEntity.internalServerError().body(apiResponse);
+        }
+
     }
 
 }

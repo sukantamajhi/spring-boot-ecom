@@ -1,13 +1,17 @@
 package com.sukanta.springbootecom.service;
 
-import com.sukanta.springbootecom.config.Constant;
-import com.sukanta.springbootecom.model.Product;
-import com.sukanta.springbootecom.repository.productRepository;
+import java.util.List;
+import java.util.Objects;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import com.sukanta.springbootecom.config.Constant;
+import com.sukanta.springbootecom.model.Product;
+import com.sukanta.springbootecom.model.user.User;
+import com.sukanta.springbootecom.repository.productRepository;
+
+import lombok.NonNull;
 
 @Service
 public class productService {
@@ -18,21 +22,39 @@ public class productService {
         this.productRepository = productRepository;
     }
 
-    public Product createProduct(@NotNull Product request, String userId) {
-        Product product = Product.builder().name(request.getName()).description(request.getDescription()).sku(request.getSku()).category(request.getCategory()).amount(Constant.formatToTwoDecimalPlaces(request.getAmount())).currency(request.getCurrency()).currSymbol(request.getCurrency().getAbbreviation()).createdBy(userId).build();
-        return productRepository.save(product);
+    public Product createProduct(@NotNull Product request, User user) throws Exception {
+        Product product = Product.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .sku(request.getSku())
+                .category(request.getCategory())
+                .amount(Constant.formatToTwoDecimalPlaces(request.getAmount()))
+                .currency(request.getCurrency())
+                .currSymbol(request.getCurrency().getAbbreviation())
+                .createdBy(user).build();
+
+        if (product != null) {
+            return productRepository.save(product);
+        } else {
+            throw new Exception(Constant.PRODUCT_CREATE_FAILED);
+        }
+
     }
 
     public List<Product> getProducts(String userId, String searchString) {
-        return searchString == null ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId) : productRepository.findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(userId, searchString, searchString);
+        return searchString == null ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
+                : productRepository
+                        .findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                                userId, searchString, searchString);
     }
 
     public List<Product> getAllProducts(String searchString) {
-        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(searchString, searchString);
+        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                searchString, searchString);
     }
 
-    public Product updateProduct(String userId, String productId, Product request) throws Exception {
-        Product existingProduct = productRepository.findById(productId).orElse(null);
+    public Product updateProduct(@NonNull String userId, @NonNull String productId, Product request) throws Exception {
+        Product existingProduct = productRepository.findById(productId).get();
 
         if (existingProduct != null) {
             existingProduct.setName(request.getName());
@@ -45,11 +67,11 @@ public class productService {
         }
     }
 
-    public void deleteProduct(String userId, String productId) throws Exception {
-        Product existingProduct = productRepository.findById(productId).orElse(null);
+    public void deleteProduct(String userId, @NonNull String productId) throws Exception {
+        Product existingProduct = productRepository.findById(productId).get();
 
         if (existingProduct != null) {
-            if (!Objects.equals(existingProduct.getCreatedBy(), userId)) {
+            if (!Objects.equals(existingProduct.getCreatedBy().getId(), userId)) {
                 throw new Exception(Constant.PRODUCT_NOT_FOUND);
             } else {
                 productRepository.deleteById(productId);
@@ -58,8 +80,7 @@ public class productService {
     }
 
     public Product changeStatus(
-            @NotNull String userId, @NotNull String productId
-    ) throws Exception {
+            @NotNull String userId, @NotNull String productId) throws Exception {
         Product product = productRepository.findByCreatedByAndId(userId, productId);
 
         if (product != null) {

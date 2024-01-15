@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.sukanta.springbootecom.model.enums.Currency;
+import com.sukanta.springbootecom.model.user.User;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
@@ -41,7 +42,7 @@ public class Product {
     private List<Category> category;
     @CreatedBy
     @DBRef
-    private String createdBy;
+    private User createdBy;
     @CreatedDate
     @Hidden
     private Date createdAt;

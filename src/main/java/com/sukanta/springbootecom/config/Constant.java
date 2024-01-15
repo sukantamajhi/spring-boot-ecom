@@ -30,6 +30,8 @@ public class Constant {
     public static final String COUPON_CREATED = "Coupon created successfully";
     public static final String COUPONS_FETCH_FAILED = "Failed to fetch coupons";
     public static final String COUPONS_FETCHED_SUCCESS = "Coupons fetched successfully";
+    public static final String PRODUCT_CREATE_FAILED = "Failed to create product";
+    public static final String DISCOUNT_CREATE_FAILED = "Failed to create discount";
 
     public static float formatToTwoDecimalPlaces(double number) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
