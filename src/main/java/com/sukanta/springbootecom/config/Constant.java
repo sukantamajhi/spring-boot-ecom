@@ -32,6 +32,11 @@ public class Constant {
     public static final String COUPONS_FETCHED_SUCCESS = "Coupons fetched successfully";
     public static final String PRODUCT_CREATE_FAILED = "Failed to create product";
     public static final String DISCOUNT_CREATE_FAILED = "Failed to create discount";
+    public static final String COUPON_UPDATED = "Coupon updated successfully";
+    public static final String COUPON_UPDATE_FAILED = "Failed to update coupon";
+    public static final String COUPON_NOT_FOUND = "Coupon not found";
+    public static final String INTERNAL_SERVER_ERROR = "Internal server error";
+    public static final String COUPON_DELETED = "Coupon deleted successfully";
 
     public static float formatToTwoDecimalPlaces(double number) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");

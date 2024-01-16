@@ -56,4 +56,26 @@ public class couponService {
             throw new Exception(err);
         }
     }
+
+    public Coupon update(@NonNull String couponId, @NonNull Coupon request) throws Exception {
+        Coupon coupon = couponRepository.findById(couponId).orElse(null);
+        if (coupon != null) {
+            coupon.setAmount(request.getAmount());
+            coupon.setProductId(request.getProductId());
+
+            return couponRepository.save(coupon);
+        } else {
+            return null;
+        }
+
+    }
+
+    public void delete(@NonNull String couponId) throws Exception {
+        Coupon coupon = couponRepository.findById(couponId).orElse(null);
+        if (coupon != null) {
+            couponRepository.delete(coupon);
+        } else {
+            throw new Exception("Coupon not found");
+        }
+    }
 }

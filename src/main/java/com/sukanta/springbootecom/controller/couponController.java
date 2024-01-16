@@ -6,9 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -150,6 +152,102 @@ public class couponController {
             apiResponse.setCode("COUPONS_FETCH_FAILED");
             apiResponse.setMessage(Constant.COUPONS_FETCH_FAILED);
             apiResponse.setErr(err);
+
+            return ResponseEntity.internalServerError().body(apiResponse);
+        }
+
+    }
+
+    @PutMapping("/{couponId}")
+    public ResponseEntity<ApiResponse<Coupon>> UpdateCoupon(
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @NonNull @PathVariable String couponId,
+            @NonNull @RequestBody Coupon request) {
+        ApiResponse<Coupon> apiResponse = new ApiResponse<>();
+        try {
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
+
+            if (tokenExpired) {
+                apiResponse.setError(true);
+                apiResponse.setCode("SESSION_EXPIRED");
+                apiResponse.setMessage(Constant.SESSION_EXPIRED);
+
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            }
+
+            Role userRole = jwtAuthService.getUser(token).getRole();
+
+            if (userRole != Role.ADMIN) {
+                apiResponse.setError(true);
+                apiResponse.setCode("ACCESS_DENIED");
+                apiResponse.setMessage(Constant.ACCESS_DENIED);
+
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+            Coupon updatedCoupon = couponService.update(couponId, request);
+            if (updatedCoupon != null) {
+                apiResponse.setError(false);
+                apiResponse.setCode("COUPON_UPDATED");
+                apiResponse.setMessage(Constant.COUPON_UPDATED);
+                apiResponse.setData(updatedCoupon);
+
+                return ResponseEntity.ok().body(apiResponse);
+            } else {
+                apiResponse.setError(true);
+                apiResponse.setCode("COUPON_UPDATE_FAILED");
+                apiResponse.setMessage(Constant.COUPON_UPDATE_FAILED);
+
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+        } catch (Exception e) {
+            log.error("error in update coupons-->> " + e);
+            apiResponse.setError(true);
+            apiResponse.setCode("COUPON_UPDATE_FAILED");
+            apiResponse.setMessage(Constant.INTERNAL_SERVER_ERROR);
+            apiResponse.setErr(e);
+
+            return ResponseEntity.internalServerError().body(apiResponse);
+        }
+
+    }
+
+    @DeleteMapping("/{couponId}")
+    public ResponseEntity<ApiResponse<Coupon>> UpdateCoupon(
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @NonNull @PathVariable String couponId) {
+        ApiResponse<Coupon> apiResponse = new ApiResponse<>();
+        try {
+            boolean tokenExpired = jwtAuthService.verifyJWT(token);
+
+            if (tokenExpired) {
+                apiResponse.setError(true);
+                apiResponse.setCode("SESSION_EXPIRED");
+                apiResponse.setMessage(Constant.SESSION_EXPIRED);
+
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            }
+
+            Role userRole = jwtAuthService.getUser(token).getRole();
+
+            if (userRole != Role.ADMIN) {
+                apiResponse.setError(true);
+                apiResponse.setCode("ACCESS_DENIED");
+                apiResponse.setMessage(Constant.ACCESS_DENIED);
+
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+            couponService.delete(couponId);
+            apiResponse.setError(false);
+            apiResponse.setCode("COUPON_DELETED");
+            apiResponse.setMessage(Constant.COUPON_DELETED);
+
+            return ResponseEntity.ok().body(apiResponse);
+        } catch (Exception e) {
+            log.error("error in update coupons-->> " + e);
+            apiResponse.setError(true);
+            apiResponse.setCode("COUPON_UPDATE_FAILED");
+            apiResponse.setMessage(Constant.INTERNAL_SERVER_ERROR);
+            apiResponse.setErr(e);
 
             return ResponseEntity.internalServerError().body(apiResponse);
         }
