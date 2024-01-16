@@ -162,8 +162,8 @@ public class discountController {
 
 	@PutMapping("/{discountId}")
 	public ResponseEntity<ApiResponse<Discount>> putMethodName(
-			@RequestHeader(name = "Authorization") String token, @PathVariable String discountId,
-			@RequestBody Discount request) {
+			@RequestHeader(name = "Authorization") String token,
+			@NonNull @PathVariable String discountId, @RequestBody Discount request) {
 
 		ApiResponse<Discount> apiResponse = new ApiResponse<>();
 
@@ -177,7 +177,6 @@ public class discountController {
 
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
 			} else {
-				log.info("Updating discount");
 				User userDetails = jwtAuthService.getUser(token);
 				if (userDetails != null && userDetails.getRole() == Role.ADMIN) {
 					Discount discount = discountService.updateDiscount(request, discountId);

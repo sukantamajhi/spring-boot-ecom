@@ -14,10 +14,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.log4j.Log4j2;
 
 @Component
-@Log4j2
 public class JwtAuthService {
     private static final long EXPIRATION_TIME = 864_000_000;
     private final userRepository userRepository;

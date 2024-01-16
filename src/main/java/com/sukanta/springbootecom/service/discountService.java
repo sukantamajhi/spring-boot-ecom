@@ -102,9 +102,24 @@ public class discountService {
         }
     }
 
-    public Discount updateDiscount(Discount request, String discountId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateDiscount'");
+    public Discount updateDiscount(Discount request, @NonNull String discountId) throws Exception {
+        try {
+            Discount discount = discountRepo.findById(discountId).orElse(null);
+
+            if (discount == null) {
+                return null;
+            } else {
+                discount.setAmount(request.getAmount());
+                discount.setPercentage(request.getPercentage());
+                discount.setName(request.getName());
+                discount.setDescription(request.getDescription());
+                discount.setStatus(request.isStatus());
+
+                return discountRepo.save(discount);
+            }
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
     }
 
 }
