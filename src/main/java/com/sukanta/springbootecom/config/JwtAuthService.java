@@ -37,13 +37,14 @@ public class JwtAuthService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 
-        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email).claim("userId", userId)
-                .setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().setHeaderParam("typ", "JWT").claim("email", email)
+                .claim("userId", userId).setIssuedAt(now).setExpiration(expiryDate)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public User getUser(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSignInKey()).build()
+                .parseClaimsJws(token).getBody();
 
         String email = (String) claims.get("email");
 
@@ -51,14 +52,14 @@ public class JwtAuthService {
     }
 
     public String getUserId(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSignInKey()).build()
+                .parseClaimsJws(token).getBody();
 
         return String.valueOf(claims.get("userId"));
     }
 
     private boolean validateToken(String token) throws Exception {
         try {
-            log.info("Token ==>> ", token);
             Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {

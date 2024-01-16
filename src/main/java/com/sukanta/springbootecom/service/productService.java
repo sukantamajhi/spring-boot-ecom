@@ -1,5 +1,6 @@
 package com.sukanta.springbootecom.service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,14 +24,13 @@ public class productService {
     }
 
     public Product createProduct(@NotNull Product request, User user) throws Exception {
-        Product product = Product.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .sku(request.getSku())
+        final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+        Product product = Product.builder().name(request.getName())
+                .description(request.getDescription()).sku(request.getSku())
                 .category(request.getCategory())
-                .amount(Constant.formatToTwoDecimalPlaces(request.getAmount()))
-                .currency(request.getCurrency())
-                .currSymbol(request.getCurrency().getAbbreviation())
+                .amount(Float.parseFloat(decimalFormat.format(request.getAmount())))
+                .currency(request.getCurrency()).currSymbol(request.getCurrency().getAbbreviation())
                 .createdBy(user).build();
 
         if (product != null) {
@@ -42,18 +42,21 @@ public class productService {
     }
 
     public List<Product> getProducts(String userId, String searchString) {
-        return searchString == null ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
+        return searchString == null
+                ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
                 : productRepository
                         .findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
                                 userId, searchString, searchString);
     }
 
     public List<Product> getAllProducts(String searchString) {
-        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                searchString, searchString);
+        return productRepository
+                .findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                        searchString, searchString);
     }
 
-    public Product updateProduct(@NonNull String userId, @NonNull String productId, Product request) throws Exception {
+    public Product updateProduct(@NonNull String userId, @NonNull String productId, Product request)
+            throws Exception {
         Product existingProduct = productRepository.findById(productId).get();
 
         if (existingProduct != null) {
@@ -79,8 +82,8 @@ public class productService {
         }
     }
 
-    public Product changeStatus(
-            @NotNull String userId, @NotNull String productId) throws Exception {
+    public Product changeStatus(@NotNull String userId, @NotNull String productId)
+            throws Exception {
         Product product = productRepository.findByCreatedByAndId(userId, productId);
 
         if (product != null) {
