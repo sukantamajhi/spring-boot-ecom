@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000, http://localhost:3001")
 @RequestMapping("/api/coupons")
 @Tag(name = "Coupons", description = "Coupons API")
 @Slf4j
@@ -161,8 +161,7 @@ public class couponController {
     @PutMapping("/{couponId}")
     public ResponseEntity<ApiResponse<Coupon>> UpdateCoupon(
             @NonNull @RequestHeader(name = "Authorization") String token,
-            @NonNull @PathVariable String couponId,
-            @NonNull @RequestBody Coupon request) {
+            @NonNull @PathVariable String couponId, @NonNull @RequestBody Coupon request) {
         ApiResponse<Coupon> apiResponse = new ApiResponse<>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);

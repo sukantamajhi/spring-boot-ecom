@@ -24,4 +24,44 @@ public class ApiResponse<T> {
     private String access_token;
     private T data;
     private Exception err;
+    
+    
+	public boolean isError() {
+		return error;
+	}
+	public void setError(boolean error) {
+		this.error = error;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getAccess_token() {
+		return access_token;
+	}
+	public void setAccess_token(String access_token) {
+		this.access_token = access_token;
+	}
+	public T getData() {
+		return data;
+	}
+	public void setData(T data) {
+		this.data = data;
+	}
+	public Exception getErr() {
+		return err;
+	}
+	public void setErr(Exception err) {
+		this.err = err;
+	}
+    
+    
 }

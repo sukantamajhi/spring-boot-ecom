@@ -33,9 +33,9 @@ public class userService {
         var ExistingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (ExistingUser == null) {
-            var user = User.builder().name(request.getName()).email(request.getEmail()).phone(request.getPhone())
-                    .address(request.getAddress()).role(Role.USER).password(encoder.encode(request.getPassword()))
-                    .build();
+            var user = User.builder().name(request.getName()).email(request.getEmail())
+                    .phone(request.getPhone()).address(request.getAddress()).role(Role.USER)
+                    .password(encoder.encode(request.getPassword())).build();
             try {
                 if (user != null) {
                     return userRepository.save(user);
@@ -93,8 +93,8 @@ public class userService {
         }
     }
 
-    public List<User> getAllUsers(int page) {
-        return userRepository.findAll().subList(page * 10, (page + 1) * 10);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public User getUserById(@NonNull String userId) {

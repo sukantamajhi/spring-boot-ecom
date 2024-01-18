@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Product", description = "Product API")
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000, http://localhost:3001")
 public class productController {
 
     private final productService productService;
@@ -44,8 +44,8 @@ public class productController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Product>> createProduct(
-            @NonNull @RequestHeader(name = "Authorization") String token, @RequestBody Product request)
-            throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @RequestBody Product request) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         var tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -120,8 +120,8 @@ public class productController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<ApiResponse<Product>> updateProduct(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId,
-            @RequestBody Product request) throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @PathVariable String productId, @RequestBody Product request) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -153,8 +153,8 @@ public class productController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<Product>> deleteProduct(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId)
-            throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @PathVariable String productId) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -185,8 +185,8 @@ public class productController {
 
     @PutMapping("/status/{productId}")
     public ResponseEntity<ApiResponse<Product>> updateProductStatus(
-            @NonNull @RequestHeader(name = "Authorization") String token, @PathVariable String productId)
-            throws Exception {
+            @NonNull @RequestHeader(name = "Authorization") String token,
+            @PathVariable String productId) throws Exception {
         ApiResponse<Product> apiResponse = new ApiResponse<>();
         boolean tokenExpired = jwtAuthService.verifyJWT(token);
 
@@ -209,12 +209,8 @@ public class productController {
 
             } catch (Exception e) {
                 log.error("Error in change product status", e);
-                ApiResponse.builder()
-                        .error(true)
-                        .code("INTERNAL_SERVER_ERROR")
-                        .message(e.getMessage())
-                        .err(e)
-                        .build();
+                ApiResponse.builder().error(true).code("INTERNAL_SERVER_ERROR")
+                        .message(e.getMessage()).err(e).build();
                 return ResponseEntity.internalServerError().body(apiResponse);
             }
         }

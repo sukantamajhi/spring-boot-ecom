@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sukanta.springbootecom.config.ApiResponse;
@@ -32,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "User", description = "User API")
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000, http://localhost:3001")
 public class userController {
 
     private final userService userService;
@@ -133,7 +132,8 @@ public class userController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> changeStatus(
-            @NotNull @RequestHeader(name = "Authorization") String token, @PathVariable String userId) {
+            @NotNull @RequestHeader(name = "Authorization") String token,
+            @PathVariable String userId) {
         var apiResponse = new ApiResponse<User>();
 
         try {
@@ -172,21 +172,21 @@ public class userController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<ApiResponse<List<User>>> getAllUsers(
-            @RequestHeader(name = "Authorization") String token,
-            @RequestParam(name = "page", defaultValue = "1") int page) throws Exception {
+            @RequestHeader(name = "Authorization") String token) throws Exception {
         var apiResponse = new ApiResponse<List<User>>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);
             if (tokenExpired) {
-                ApiResponse.builder().error(true).code("TOKEN_EXPIRED").message(Constant.SESSION_EXPIRED).build();
+                ApiResponse.builder().error(true).code("TOKEN_EXPIRED")
+                        .message(Constant.SESSION_EXPIRED).build();
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
             } else {
                 var userDetails = jwtAuthService.getUser(token);
 
                 if (userDetails.getRole() == Role.ADMIN) {
-                    List<User> users = userService.getAllUsers(page);
+                    List<User> users = userService.getAllUsers();
 
                     apiResponse.setError(false);
                     apiResponse.setCode("USERS_FETCHED");
@@ -216,8 +216,8 @@ public class userController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getUserById(
-            @RequestHeader(name = "Authorization") String token,
-            @PathVariable String userId) throws Exception {
+            @RequestHeader(name = "Authorization") String token, @PathVariable String userId)
+            throws Exception {
         var apiResponse = new ApiResponse<User>();
         try {
             boolean tokenExpired = jwtAuthService.verifyJWT(token);

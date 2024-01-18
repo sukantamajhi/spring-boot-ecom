@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Tag(name = "Discount", description = "Discount API")
 @RequestMapping("/api/discounts")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000, http://localhost:3001")
 @Slf4j
 public class discountController {
 
