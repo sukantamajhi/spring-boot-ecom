@@ -24,7 +24,7 @@ public class File {
 	private String id;
 	private String fileName;
 	private String type;
-	private byte[] data;
+	private String url;
 	@CreatedDate
 	@Hidden
 	private Date createdAt;

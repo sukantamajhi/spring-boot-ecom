@@ -44,4 +44,6 @@ public class Constant {
         public static final String DISCOUNT_UPDATE_FAILED = "Failed to update discount";
         public static final String FILE_UPLOAD_FAILED = "Failed to upload file";
         public static final String FILE_UPLOADED = "File uploaded successfully";
+        public static final String NO_FILES_SELECTED = "No files selected";
+        public static final String MAX3FILESELECT = "Maximum 3 files can be uploaded at a time";
 }
