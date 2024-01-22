@@ -168,7 +168,7 @@ public class categoryController {
                 return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
             }
         } catch (Exception err) {
-            log.error("Error in get categories for user ==>> " + err);
+            log.error("Error in update category for user ==>> " + err);
             apiResponse.setError(true);
             apiResponse.setCode("PRODUCT_NOT_FOUND");
             apiResponse.setMessage(err.getMessage());
