@@ -1,20 +1,20 @@
 package com.sukanta.springbootecom.service;
 
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Objects;
-
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
-
 import com.sukanta.springbootecom.config.Constant;
 import com.sukanta.springbootecom.model.Product;
 import com.sukanta.springbootecom.model.user.User;
 import com.sukanta.springbootecom.repository.productRepository;
-
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
+
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Objects;
 
 @Service
+@Slf4j
 public class productService {
 
     private final productRepository productRepository;
@@ -26,12 +26,9 @@ public class productService {
     public Product createProduct(@NotNull Product request, User user) throws Exception {
         final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-        Product product = Product.builder().name(request.getName())
-                .description(request.getDescription()).sku(request.getSku())
-                .category(request.getCategory())
-                .amount(Float.parseFloat(decimalFormat.format(request.getAmount())))
-                .currency(request.getCurrency()).currSymbol(request.getCurrency().getAbbreviation())
-                .createdBy(user).build();
+        log.info("{} <<== get categories", request.getCategory());
+
+        Product product = Product.builder().name(request.getName()).description(request.getDescription()).sku(request.getSku()).category(request.getCategory()).amount(Float.parseFloat(decimalFormat.format(request.getAmount()))).currency(request.getCurrency()).currSymbol(request.getCurrency().getAbbreviation()).createdBy(user).build();
 
         if (product != null) {
             return productRepository.save(product);
@@ -42,21 +39,20 @@ public class productService {
     }
 
     public List<Product> getProducts(String userId, String searchString) {
-        return searchString == null
-                ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
-                : productRepository
-                        .findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                                userId, searchString, searchString);
+//        return searchString == null
+//                ? productRepository.getProductsByCreatedByOrderByCreatedAtDesc(userId)
+//                : productRepository
+//                        .findByCreatedByAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
+//                                userId, searchString, searchString);
+        log.info("{} user id", userId);
+        return productRepository.findAll();
     }
 
     public List<Product> getAllProducts(String searchString) {
-        return productRepository
-                .findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(
-                        searchString, searchString);
+        return productRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseOrderByCreatedAtDesc(searchString, searchString);
     }
 
-    public Product updateProduct(@NonNull String userId, @NonNull String productId, Product request)
-            throws Exception {
+    public Product updateProduct(@NonNull String userId, @NonNull String productId, Product request) throws Exception {
         Product existingProduct = productRepository.findById(productId).get();
 
         if (existingProduct != null) {
@@ -82,8 +78,7 @@ public class productService {
         }
     }
 
-    public Product changeStatus(@NotNull String userId, @NotNull String productId)
-            throws Exception {
+    public Product changeStatus(@NotNull String userId, @NotNull String productId) throws Exception {
         Product product = productRepository.findByCreatedByAndId(userId, productId);
 
         if (product != null) {

@@ -56,7 +56,7 @@ public class storageController {
 				User userDetails = jwtAuthService.getUser(token);
 				if (userDetails != null) {
 
-					if (files.size() == 0) {
+					if (files.isEmpty()) {
 						apiResponse.setError(true);
 						apiResponse.setCode("NO_FILES_SELECTED");
 						apiResponse.setMessage(Constant.NO_FILES_SELECTED);
@@ -67,7 +67,7 @@ public class storageController {
 						apiResponse.setCode("FILE_UPLOAD_FAILED");
 						apiResponse.setMessage(Constant.FILE_UPLOAD_FAILED);
 						apiResponse.setErr(new Exception("File size exceeded"));
-						apiResponse.setErrMessage(Constant.MAX3FILESELECT);
+						apiResponse.setErrorMessage(Constant.MAX3FILESELECT);
 
 						return ResponseEntity.badRequest().body(apiResponse);
 					}
@@ -93,7 +93,7 @@ public class storageController {
 			apiResponse.setCode("FILE_UPLOAD_FAILED");
 			apiResponse.setMessage(Constant.FILE_UPLOAD_FAILED);
 			apiResponse.setErr(e);
-			apiResponse.setErrMessage(e.getMessage());
+			apiResponse.setErrorMessage(e.getMessage());
 
 			return ResponseEntity.internalServerError().body(apiResponse);
 		}
